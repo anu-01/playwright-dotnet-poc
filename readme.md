@@ -42,7 +42,7 @@ To install Playwright's required browsers, use the following PowerShell command:
 powershell.exe -File bin\Debug\net8.0\playwright.ps1 install
 ```
 
-##Step 5: Write Your First Playwright Test
+## Step 5: Write Your First Playwright Test
 In your test project, add the following sample test to get started with Playwright:
 ```csharp
 using System.Text.RegularExpressions;
@@ -78,14 +78,14 @@ public class ExampleTest : PageTest
 
 ```
 
-##Step 6: Run the Test
+## Step 6: Run the Test
 Run your tests with the following command:
 
 ```bash
 dotnet test
 ```
 
-##Step 7: Configure NUnit to Run Tests in Parallel
+## Step 7: Configure NUnit to Run Tests in Parallel
 To enable parallel test execution in NUnit, create a .runsettings file in the root directory of your project and configure the settings as shown below:
 
 Create a file named Chrome.runsettings.

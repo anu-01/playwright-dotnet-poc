@@ -31,8 +31,8 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ExtentReport
-        path: reports/ExtentReport.html
+        path: reports/
 
     - name: Add Extent Report Link to Summary
       if: always() # Ensure this step runs even if tests fail
-      run: echo "💡 [Download Extent Report](../../artifacts/ExtentReport)" >> $GITHUB_STEP_SUMMARY
+      run: echo "💡The Extent Report is available for download from the Artifacts section below." >> $GITHUB_STEP_SUMMARY

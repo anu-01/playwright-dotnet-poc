@@ -35,4 +35,4 @@ jobs:
 
     - name: Add Extent Report Link to Summary
       if: always() # Ensure this step runs even if tests fail
-      run: echo "💡 [View Extent Report](./reports/ExtentReport.html)" >> $GITHUB_STEP_SUMMARY
+      run: echo "💡 [Download Extent Report](../../artifacts/ExtentReport)" >> $GITHUB_STEP_SUMMARY

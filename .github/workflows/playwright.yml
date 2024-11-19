@@ -20,3 +20,19 @@ jobs:
       run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
     - name: Run your tests
       run: dotnet test
+    - name: Archive Extent Report
+      if: always() # Ensures this step runs even if tests fail
+      run: |
+        mkdir -p reports
+        cp bin/Debug/net8.0/*.html reports/
+      continue-on-error: true
+
+    - name: Upload Extent Report as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ExtentReport
+        path: reports/
+
+    - name: Add Extent Report Link to Summary
+      if: always() # Ensure this step runs even if tests fail
+      run: echo "💡 [View Extent Report](./reports/ExtentReport.html)" >> $GITHUB_STEP_SUMMARY

@@ -147,7 +147,7 @@ dotnet test --settings Chrome.runsettings
 4. Locate the HTML Report
 After the tests run, an HTML report will be generated in the bin\Debug\net8.0 folder. Open the report in a browser to view test results.
 
-For more details on configuring and customizing ExtentReports, visit the [Official Documentation] (https://extentreports.com/docs/versions/4/net/index.html)
+For more details on configuring and customizing ExtentReports, visit the [Official Documentation](https://extentreports.com/docs/versions/4/net/index.html)
 
 This guide should give you a solid start with Playwright and .NET. For further details, refer to the [Playwright documentation](https://playwright.dev/dotnet/docs/writing-tests).
 

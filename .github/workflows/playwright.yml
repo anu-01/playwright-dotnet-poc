@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ExtentReport
-        path: reports/
+        path: reports/ExtentReport.html
 
     - name: Add Extent Report Link to Summary
       if: always() # Ensure this step runs even if tests fail

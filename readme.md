@@ -109,7 +109,7 @@ Add the following content:
   <!-- Playwright -->  
   <Playwright>
     <BrowserName>chromium</BrowserName>
-    <ExpectTimeout>5000</ExpectTimeout>
+    <ExpectTimeout>10000</ExpectTimeout>
     <LaunchOptions>
       <Headless>false</Headless>
       <Channel>msedge</Channel>
@@ -122,4 +122,33 @@ When running tests, use the --settings option to specify the .runsettings file:
 dotnet test --settings Chrome.runsettings
 
 ```
+
+## Step 8: Configure Extent Reporting for NUnit Tests
+1. Add ExtentReports Package
+Install the ExtentReports package using the following command:
+
+```bash
+dotnet add package ExtentReports --version 5.0.4
+
+```
+
+2. Add ConfigurationManager Package
+Install the ConfigurationManager package to handle app settings:
+```bash
+dotnet add package System.Configuration.ConfigurationManager --version 9.0.0
+
+```
+3. Run Your Tests
+Execute the tests using the specified settings file:
+```bash
+dotnet test --settings Chrome.runsettings
+
+```
+4. Locate the HTML Report
+After the tests run, an HTML report will be generated in the bin\Debug\net8.0 folder. Open the report in a browser to view test results.
+
+For more details on configuring and customizing ExtentReports, visit the [Official Documentation] (https://extentreports.com/docs/versions/4/net/index.html)
+
 This guide should give you a solid start with Playwright and .NET. For further details, refer to the [Playwright documentation](https://playwright.dev/dotnet/docs/writing-tests).
+
+

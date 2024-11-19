@@ -1,10 +1,9 @@
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
-using System.Threading.Tasks;
 using PlaywrightTests.Pages;
+using PlaywrightTests.Reporting;
+
 
 [TestFixture]
-public class WebTests : PageTest
+public class WebTests : ReportGenerator
 {
     private LoginPage loginPage;
     private CartPage cartPage;
@@ -19,6 +18,9 @@ public class WebTests : PageTest
     }
 
     [Test]
+    [CategoryAttribute("End to End Test to verify placing an order successfully")]
+    [CategoryAttribute("priority=1")]
+    [Author("johndoe")]
     public async Task CartCheckout()
     {
         await loginPage.Login("standard_user", "secret_sauce");
@@ -37,6 +39,6 @@ public class WebTests : PageTest
     [TearDown]
     public async Task TearDown()
     {
-        Page.CloseAsync();
+        await Page.CloseAsync();
     }
 }

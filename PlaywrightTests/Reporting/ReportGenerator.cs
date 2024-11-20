@@ -28,21 +28,23 @@ namespace PlaywrightTests.Reporting
     /// <summary>
     /// http://extentreports.com/docs/versions/4/net/
     /// </summary>
+    [TestFixture]
     public class ReportGenerator : PageTest
     {        
-        private static readonly NameValueCollection ReportSettings = ConfigurationManager.GetSection("reporting") as NameValueCollection;
-        private static readonly bool Enabled = ReportSettings != null && bool.Parse(ReportSettings["Enabled"]);
-        private static readonly bool ShowSteps = Enabled && bool.Parse(ReportSettings["ShowSteps"]);
-        private static readonly bool DarkTheme = Enabled && bool.Parse(ReportSettings["DarkTheme"]);
-        private static ExtentReports extent;  
-        private static ExtentTest extentTest;
+        private static readonly NameValueCollection ReportSettings = ConfigurationManager.GetSection("reporting") as NameValueCollection ?? new NameValueCollection();
+        private static readonly bool Enabled = ReportSettings != null && bool.TryParse(ReportSettings["Enabled"], out bool enabledValue) && enabledValue;
+        private static readonly bool ShowSteps = Enabled && ReportSettings != null && bool.TryParse(ReportSettings["ShowSteps"], out bool showStepsValue) && showStepsValue;
+        private static readonly bool DarkTheme = Enabled && ReportSettings != null && bool.TryParse(ReportSettings["DarkTheme"], out bool darkThemeValue) && darkThemeValue;
+   
+        private static ExtentReports? extent;  
+        private static ExtentTest? extentTest;
     
         [SetUp]
         public void BeforeTest()
         {
-            string currentdir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string currentdir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? string.Empty;
             string reportPath = Path.Combine(currentdir, "TestResults " + DateTime.Now.ToString("dd-MM-yyyy HH-mm-ss")+ ".html");
-            Console.WriteLine("Report Path" + reportPath);
+            Console.WriteLine("Report Path " + reportPath);
             string style = "body {font-family: 'Segoe UI';}";
             ExtentSparkReporter htmlReporter = new ExtentSparkReporter(reportPath);
             htmlReporter.Config.Theme = DarkTheme ? Theme.Dark : Theme.Standard;
@@ -56,7 +58,6 @@ namespace PlaywrightTests.Reporting
             var categories = TestContext.CurrentContext.Test.Properties["Category"];
             var author = TestContext.CurrentContext.Test.Properties.Get("Author")?.ToString() ?? "Unknown";
             AddMetadata(extentTest, categories, author);
-            Console.WriteLine("Report Location "+ reportPath);
         }
 
         [TearDown]
@@ -85,9 +86,9 @@ namespace PlaywrightTests.Reporting
                     break;
             }
 
-            var node = extentTest.CreateNode(TestContext.CurrentContext.Test.MethodName);
-            node.Log(logstatus, "Test Execution status - " + logstatus + stacktrace);
-            extent.Flush();
+            var node = extentTest?.CreateNode(TestContext.CurrentContext.Test.MethodName);
+            node?.Log(logstatus, "Test Execution status - " + logstatus + stacktrace);
+            extent?.Flush();
         }
 
         private static void AddMetadata(ExtentTest node, IEnumerable<object> categories, string author)

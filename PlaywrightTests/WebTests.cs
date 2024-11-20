@@ -10,7 +10,7 @@ public class WebTests : ReportGenerator
     private CheckoutPage checkoutPage;
 
     [SetUp]
-    public async Task SetUp()
+    public void SetUp()
     {
         loginPage = new LoginPage(Page);
         cartPage = new CartPage(Page);

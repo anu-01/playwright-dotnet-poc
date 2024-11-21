@@ -41,6 +41,7 @@ To install Playwright's required browsers, use the following PowerShell command:
 ```bash
 powershell.exe -File bin\Debug\net8.0\playwright.ps1 install
 ```
+If pwsh is not available, you have to [install PowerShell](https://docs.microsoft.com/powershell/scripting/install/installing-powershell).
 
 ## Step 5: Write Your First Playwright Test
 In your test project, add the following sample test to get started with Playwright:

@@ -1,6 +1,6 @@
 using PlaywrightTests.Pages;
 using PlaywrightTests.Reporting;
-
+namespace PlaywrightTests;
 
 [TestFixture]
 public class WebTests : ReportGenerator

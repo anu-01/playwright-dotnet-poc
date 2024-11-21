@@ -43,7 +43,7 @@ jobs:
             # Regional endpoint for Microsoft Playwright Testing
             PLAYWRIGHT_SERVICE_URL: ${{ secrets.PLAYWRIGHT_SERVICE_URL }}
             PLAYWRIGHT_SERVICE_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}
-          run: dotnet test --settings .runsettings --logger "microsoft-playwright-testing" -- NUnit.NumberOfTestWorkers=20
+          run: dotnet test --settings .runsettings --logger "microsoft-playwright-testing" --NUnit.NumberOfTestWorkers 20
   
         - name: Archive Extent Report
           if: always() # Ensures this step runs even if tests fail

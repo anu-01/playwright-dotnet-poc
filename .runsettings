@@ -14,7 +14,7 @@
   <!-- NUnit adapter -->  
   <NUnit>
     <!-- Adjust parallel workers, parallel worker would also be bound by number of unit test files -->
-    <NumberOfTestWorkers>10</NumberOfTestWorkers>
+    <NumberOfTestWorkers>20</NumberOfTestWorkers>
   </NUnit>
   <!-- General run configuration -->
   <RunConfiguration>

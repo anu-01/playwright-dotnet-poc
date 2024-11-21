@@ -1,3 +1,4 @@
+name: Microsoft Playwright Tests in Azure
 on:
     push:
       branches: [ main, master ]

@@ -28,7 +28,7 @@ namespace PlaywrightTests.Reporting
     /// <summary>
     /// http://extentreports.com/docs/versions/4/net/
     /// </summary>
-    [TestFixture]
+    [SetUpFixture]
     public class ReportGenerator : PageTest
     {        
         private static readonly NameValueCollection ReportSettings = ConfigurationManager.GetSection("reporting") as NameValueCollection ?? new NameValueCollection();
@@ -37,13 +37,14 @@ namespace PlaywrightTests.Reporting
         private static readonly bool DarkTheme = Enabled && ReportSettings != null && bool.TryParse(ReportSettings["DarkTheme"], out bool darkThemeValue) && darkThemeValue;
    
         private static ExtentReports? extent;  
-        private static ExtentTest? extentTest;
+        public static ExtentTest? extentTest;
+        
     
-        [SetUp]
-        public void BeforeTest()
+        [OneTimeSetUp]
+        public void ClassSetUp()
         {
             string currentdir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-            string reportPath = Path.Combine(currentdir, "TestResults " + DateTime.Now.ToString("dd-MM-yyyy HH-mm-ss")+ ".html");
+            string reportPath = Path.Combine(currentdir, "TestReports", "TestResults " + DateTime.Now.ToString("dd-MM-yyyy HH-mm-ss")+ ".html");
             Console.WriteLine("Report Path " + reportPath);
             string style = "body {font-family: 'Segoe UI';}";
             ExtentSparkReporter htmlReporter = new ExtentSparkReporter(reportPath);
@@ -54,8 +55,19 @@ namespace PlaywrightTests.Reporting
             extent.AddSystemInfo("Env", ConfigurationManager.AppSettings["Env"]);
             extent.AddSystemInfo("User", Environment.UserName);
             extent.AttachReporter(htmlReporter);
-            extentTest = extent.CreateTest(TestContext.CurrentContext.Test.Name);
-            var categories = TestContext.CurrentContext.Test.Properties["Category"];
+        }
+
+        [OneTimeTearDown]
+        public static void ClassTearDown()
+        {
+        extent?.Flush();
+        }
+
+        [SetUp]
+        public void BeforeTest()
+        {
+            extentTest = extent?.CreateTest(NUnit.Framework.TestContext.CurrentContext.Test.ClassName);
+            var categories = NUnit.Framework.TestContext.CurrentContext.Test.Properties["Category"];
             var author = TestContext.CurrentContext.Test.Properties.Get("Author")?.ToString() ?? "Unknown";
             AddMetadata(extentTest, categories, author);
         }
@@ -88,7 +100,6 @@ namespace PlaywrightTests.Reporting
 
             var node = extentTest?.CreateNode(TestContext.CurrentContext.Test.MethodName);
             node?.Log(logstatus, "Test Execution status - " + logstatus + stacktrace);
-            extent?.Flush();
         }
 
         private static void AddMetadata(ExtentTest node, IEnumerable<object> categories, string author)

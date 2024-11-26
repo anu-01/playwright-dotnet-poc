@@ -24,7 +24,7 @@ jobs:
       if: always() # Ensures this step runs even if tests fail
       run: |
         mkdir -p reports
-        cp bin/Debug/net8.0/*.html reports/
+        cp bin/Debug/net8.0/TestReports reports/
       continue-on-error: true
 
     - name: Upload Extent Report as Artifact

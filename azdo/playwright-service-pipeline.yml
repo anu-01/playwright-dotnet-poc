@@ -1,38 +1,56 @@
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '8.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+# Define pipeline trigger
+trigger:
+- main
 
-- checkout: self
+# Define the jobs
+jobs:
+- job: BuildAndTest
+  displayName: 'Build and Test Job'
+  pool:
+    vmImage: 'ubuntu-latest'
 
-- script: dotnet restore
-  displayName: 'Restore dependencies'
-  workingDirectory: . # update accordingly
+  steps:
+  # Use .NET SDK 8.x
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK 8.x'
+    inputs:
+      packageType: 'sdk'
+      version: '8.x'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
 
-- script: dotnet build --configuration Release --no-restore
-  displayName: 'Build'
-  workingDirectory: . # update accordingly
+  # Checkout the code repository
+  - checkout: self
 
-- task: AzureCLI@2
-  displayName: Run Playwright Test  
+  # Restore dependencies
+  - script: dotnet restore
+    displayName: 'Restore dependencies'
+    workingDirectory: . # Update path if not at the root
+
+  # Build the project
+  - script: dotnet build --configuration Release --no-restore
+    displayName: 'Build'
+    workingDirectory: . # Update path if not at the root
+
+  # Run Playwright tests
+  - task: AzureCLI@2
+    displayName: 'Run Playwright Tests'
+    inputs:
+      azureSubscription: 'Playwright Worker Connection' # Update this to match your service connection name
+      scriptType: 'pscore'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        dotnet test --configuration Release --settings:.runsettings --logger "microsoft-playwright-testing" -- NUnit.NumberOfTestWorkers=20
     env:
-    PLAYWRIGHT_SERVICE_URL: $(PLAYWRIGHT_SERVICE_URL)
-    PLAYWRIGHT_SERVICE_RUN_ID: ${{ parameters.runIdPrefix }}$(Build.DefinitionName) - $(Build.BuildNumber) - $(System.JobAttempt) 
-  inputs:
-    azureSubscription: My_Service_Connection # Service connection used to authenticate this pipeline with Azure to use the service
-    scriptType: 'pscore'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      dotnet test --configuration Release --settings:.runsettings --logger "microsoft-playwright-testing" -- NUnit.NumberOfTestWorkers=20
-  addSpnToEnvironment: true
-  workingDirectory: . # update accordingly
+      PLAYWRIGHT_SERVICE_URL: $(PLAYWRIGHT_SERVICE_URL)
+      PLAYWRIGHT_SERVICE_RUN_ID: $(Build.DefinitionName)-$(Build.BuildNumber)-$(System.JobAttempt)
+      addSpnToEnvironment: true
+      workingDirectory: . # Update path if Playwright tests are in a subdirectory
 
-# Publish Extent Report as Artifact
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Extent Report as Artifact'
-  inputs:
-    targetPath: 'bin/Release/net8.0/TestReports'
-    artifact: 'ExtentReport'
-    publishLocation: 'pipeline'
-  condition: succeededOrFailed()
+  # Publish Extent Report as Artifact
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Extent Report as Artifact'
+    inputs:
+      targetPath: 'bin/Release/net8.0/TestReports' # Ensure this path exists and matches your output directory
+      artifact: 'ExtentReport'
+      publishLocation: 'pipeline'
+    condition: succeededOrFailed()

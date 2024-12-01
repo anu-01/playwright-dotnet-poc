@@ -37,7 +37,7 @@
             <!--microsoft playwright testing service logger for reporting -->
             <Logger friendlyName="microsoft-playwright-testing" enabled="True" />
             <!--could enable any logger additionally -->
-            <Logger friendlyName="trx" enabled="false" />
+            <Logger friendlyName="trx" enabled="True" />
         </Loggers>
     </LoggerRunSettings>
 </RunSettings>

@@ -46,6 +46,15 @@ jobs:
       addSpnToEnvironment: true
       workingDirectory: . # Update path if Playwright tests are in a subdirectory
 
+ # Publish Test Results
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    inputs:
+      testResultsFiles: '**/*.trx'
+      testResultsFormat: 'VSTest'
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+
   # Publish Extent Report as Artifact
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Extent Report as Artifact'

@@ -36,6 +36,7 @@ public class WebTests : ReportGenerator
         await checkoutPage.EnterCheckoutDetailsAsync("John", "Doe", "12345");
         ReportGenerator.extentTest?.Pass("Entering checkout details");
         await checkoutPage.VerifySummary("Sauce Labs Backpack", "1", "$29.99", "$32.39");
+        
         ReportGenerator.extentTest?.Pass("Verifying the summary");
         await checkoutPage.ConfirmOrderAsync();
         ReportGenerator.extentTest?.Pass("Confirming the order");

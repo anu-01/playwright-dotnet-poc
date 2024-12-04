@@ -1,14 +1,21 @@
 using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
 
 namespace PlaywrightTests.Pages;
     public class CartPage
     {
         private readonly IPage Page;
+        private readonly ILocator cart;
+        private readonly ILocator shoppingCartLink;
+        private readonly ILocator shoppingCartBadge;
+
 
         public CartPage(IPage page)
         {
             this.Page = page;
+            this.cart = Page.Locator("[data-test=\"cart\"]");
+            this.shoppingCartLink = Page.Locator("[data-test=\"shopping-cart-link\"]");
+            this.shoppingCartBadge = Page.Locator("[data-test=\"shopping-cart-badge\"]");
+
         }
 
         public async Task AddToCartAsync(string itemName)
@@ -18,13 +25,13 @@ namespace PlaywrightTests.Pages;
 
         public async Task GoToCartAsync()
         {
-            await Page.Locator("[data-test=\"shopping-cart-link\"]").ClickAsync();
+            await shoppingCartLink.ClickAsync();
         }
 
         public async Task VerifyCart()
         {
-            await Assertions.Expect(Page.Locator("[data-test=\"shopping-cart-badge\"]")).ToContainTextAsync("1");
-            await Assertions.Expect(Page.Locator("[data-test=\"cart\"]")).ToBeVisibleAsync();
+            await Assertions.Expect(shoppingCartBadge).ToContainTextAsync("1");
+            await Assertions.Expect(cart).ToBeVisibleAsync();
         
         }
     }

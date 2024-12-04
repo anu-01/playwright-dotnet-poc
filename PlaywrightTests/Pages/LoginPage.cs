@@ -6,24 +6,36 @@ namespace PlaywrightTests.Pages;
     public class LoginPage
     {
         private readonly IPage Page;
-
+        private readonly ILocator usernameInput;
+        private readonly ILocator passwordInput;
+        private readonly ILocator loginButton;
+        private readonly ILocator title;
+        private readonly ILocator menuButton;
+        private readonly ILocator logoutButton;
+        
         public LoginPage(IPage page)
         {
             this.Page = page;
+            this.usernameInput = Page.Locator("[data-test=\"username\"]");
+            this.passwordInput = Page.Locator("[data-test=\"password\"]");
+            this.loginButton = Page.Locator("[data-test=\"login-button\"]");
+            this.title = Page.Locator("[data-test=\"title\"]");
+            this.menuButton = Page.GetByRole(AriaRole.Button, new() { Name = "Open Menu" });
+            this.logoutButton = Page.Locator("[data-test=\"logout-sidebar-link\"]");
         }
         
         public async Task EnterUsernameAsync(string username)
         {
-            await Page.Locator("[data-test=\"username\"]").FillAsync(username);
+            await usernameInput.FillAsync(username);
         }
         public async Task EnterPasswordAsync(string password)
         {
-            await Page.Locator("[data-test=\"password\"]").FillAsync(password);
+            await passwordInput.FillAsync(password);
         }
 
         public async Task ClickLoginBtnAsync()
         {
-            await Page.Locator("[data-test=\"login-button\"]").ClickAsync();
+            await loginButton.ClickAsync();
         }
 
         public async Task Login(string username, string password)
@@ -37,13 +49,13 @@ namespace PlaywrightTests.Pages;
 
         public async Task VerifyLogin()
         {
-            await Assertions.Expect(Page.Locator("[data-test=\"title\"]")).ToBeVisibleAsync();
+           await Assertions.Expect(title).ToBeVisibleAsync(new() { Timeout= 10_000});
         }
 
         public async Task LogoutAsync()
         {
-            await Page.GetByRole(AriaRole.Button, new() { Name = "Open Menu" }).ClickAsync();
-            await Page.Locator("[data-test=\"logout-sidebar-link\"]").ClickAsync();
-            await Assertions.Expect(Page.Locator("[data-test=\"login-button\"]")).ToBeVisibleAsync();
+            await menuButton.ClickAsync();
+            await logoutButton.ClickAsync();
+            await Assertions.Expect(loginButton).ToBeVisibleAsync();
         }
     }

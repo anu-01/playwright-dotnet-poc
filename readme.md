@@ -120,7 +120,7 @@ Add the following content:
 ```
 When running tests, use the --settings option to specify the .runsettings file:
 ```bash
-dotnet test --settings Chrome.runsettings
+dotnet test --settings edge.runsettings
 
 ```
 
@@ -142,7 +142,7 @@ dotnet add package System.Configuration.ConfigurationManager --version 9.0.0
 3. Run Your Tests
 Execute the tests using the specified settings file:
 ```bash
-dotnet test --settings Chrome.runsettings
+dotnet test --settings edge.runsettings
 
 ```
 4. Locate the HTML Report

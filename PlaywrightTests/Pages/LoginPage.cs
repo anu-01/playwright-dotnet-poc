@@ -1,6 +1,7 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using Helpers;
+using PlaywrightTests.Pages.SharedComponents;
 
 namespace PlaywrightTests.Pages;
 
@@ -57,8 +58,8 @@ namespace PlaywrightTests.Pages;
 
         public async Task LogoutAsync()
         {
-            await menuButton.ClickAsync();
-            await logoutButton.ClickAsync();
+            MenuPage menu = new MenuPage(Page);
+            await menu.LogoutAsync();
             await Helpers.AssertionHelper.AssertVisibleAsync(loginButton, 20_000);
            // await Assertions.Expect(loginButton).ToBeVisibleAsync();
         }

@@ -24,6 +24,7 @@ namespace PlaywrightTests.Reporting
     using NUnit.Framework;
     using NUnit.Framework.Interfaces;
     using Microsoft.Playwright.NUnit;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// http://extentreports.com/docs/versions/4/net/
@@ -64,16 +65,28 @@ namespace PlaywrightTests.Reporting
         }
 
         [SetUp]
-        public void BeforeTest()
+        public async Task BeforeTestAsync()
         {
             extentTest = extent?.CreateTest(NUnit.Framework.TestContext.CurrentContext.Test.ClassName);
             var categories = NUnit.Framework.TestContext.CurrentContext.Test.Properties["Category"];
             var author = TestContext.CurrentContext.Test.Properties.Get("Author")?.ToString() ?? "Unknown";
-            AddMetadata(extentTest, categories, author);
+            if (extentTest != null)
+            {
+                AddMetadata(extentTest, categories, author);
+            }
+
+            // Start tracing
+            await Context.Tracing.StartAsync(new()
+            {
+                Title = $"{TestContext.CurrentContext.Test.ClassName}.{TestContext.CurrentContext.Test.Name}",
+                Screenshots = true,
+                Snapshots = true,
+                Sources = true
+            });
         }
 
         [TearDown]
-        public void AfterTest()
+        public async Task AfterTestAsync()
         {
             Status logstatus;
             TestStatus status = TestContext.CurrentContext.Result.Outcome.Status;
@@ -86,6 +99,15 @@ namespace PlaywrightTests.Reporting
             {
                 case TestStatus.Failed:
                     logstatus = Status.Fail;
+                    // Stop Tracing
+                    await Context.Tracing.StopAsync(new()
+                    {
+                        Path = Path.Combine(
+                            TestContext.CurrentContext.WorkDirectory,
+                            "playwright-traces",
+                            $"{TestContext.CurrentContext.Test.ClassName}.{TestContext.CurrentContext.Test.Name}.zip"
+                        ),
+                    });
                     break;
                 case TestStatus.Inconclusive:
                     logstatus = Status.Warning;

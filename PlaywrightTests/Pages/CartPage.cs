@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using Helpers;
 
 namespace PlaywrightTests.Pages;
     public class CartPage
@@ -30,8 +31,10 @@ namespace PlaywrightTests.Pages;
 
         public async Task VerifyCart()
         {
-            await Assertions.Expect(shoppingCartBadge).ToContainTextAsync("1");
-            await Assertions.Expect(cart).ToBeVisibleAsync();
+            // await Assertions.Expect(shoppingCartBadge).ToContainTextAsync("1");
+            await Helpers.AssertionHelper.AssertTextContainsAsync(shoppingCartBadge, "1");
+            // await Assertions.Expect(cart).ToBeVisibleAsync();
+            await Helpers.AssertionHelper.AssertVisibleAsync(cart);
         
         }
     }

@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
+using Helpers;
 
 namespace PlaywrightTests.Pages;
   
@@ -75,7 +76,8 @@ namespace PlaywrightTests.Pages;
 
         public async Task VerifySummary(string itemName, string quantity, string itemprice, string total)
         {
-            await Assertions.Expect(title).ToContainTextAsync("Checkout: Overview");
+           // await Assertions.Expect(title).ToContainTextAsync("Checkout: Overview");
+            await Helpers.AssertionHelper.AssertTextContainsAsync(title, "Checkout: Overview");
             await VerifyItemName(itemName);
             await VerifyItemQuantity(quantity);
             await VerifyItemPrice(itemprice);
@@ -84,22 +86,26 @@ namespace PlaywrightTests.Pages;
 
         public async Task VerifyItemName(string name)
         {
-            await Assertions.Expect(itemName).ToContainTextAsync(name);
+           // await Assertions.Expect(itemName).ToContainTextAsync(name);
+           await Helpers.AssertionHelper.AssertTextContainsAsync(itemName, name);
         }
 
         public async Task VerifyItemQuantity(string quantity)
         {
-            await Assertions.Expect(itemQuantity).ToContainTextAsync(quantity);
+            // await Assertions.Expect(itemQuantity).ToContainTextAsync(quantity);
+            await Helpers.AssertionHelper.AssertTextContainsAsync(itemQuantity, quantity);
         }
 
         public async Task VerifyItemPrice(string price)
         {
-            await Assertions.Expect(itemPrice).ToContainTextAsync(price);
+            // await Assertions.Expect(itemPrice).ToContainTextAsync(price);
+            await Helpers.AssertionHelper.AssertTextContainsAsync(itemPrice, price);
         }
 
         public async Task VerifyTotal(string value)
         {
-            await Assertions.Expect(total).ToContainTextAsync(value);
+            // await Assertions.Expect(total).ToContainTextAsync(value);
+            await Helpers.AssertionHelper.AssertTextContainsAsync(total, value);
         }
 
         public async Task ConfirmOrderAsync()
@@ -110,10 +116,12 @@ namespace PlaywrightTests.Pages;
 
         public async Task VerifyOrderConfirmation()
         {
-            await Assertions.Expect(title).ToContainTextAsync("Checkout: Complete!");
-            await Assertions.Expect(orderConfirmationHeader).ToContainTextAsync("Thank you for your order!");
-            await Assertions.Expect(orderConfirmationText).ToContainTextAsync("Your order has been dispatched, and will arrive just as fast as the pony can get there!");
-
+            // await Assertions.Expect(title).ToContainTextAsync("Checkout: Complete!");
+            await Helpers.AssertionHelper.AssertTextContainsAsync(title, "Checkout: Complete!");
+            // await Assertions.Expect(orderConfirmationHeader).ToContainTextAsync("Thank you for your order!");
+            await Helpers.AssertionHelper.AssertTextContainsAsync(orderConfirmationHeader, "Thank you for your order!");
+            // await Assertions.Expect(orderConfirmationText).ToContainTextAsync("Your order has been dispatched, and will arrive just as fast as the pony can get there!");
+            await Helpers.AssertionHelper.AssertTextContainsAsync(orderConfirmationText, "Your order has been dispatched, and will arrive just as fast as the pony can get there!");
         }
 
         public async Task GoBackToProductsAsync()

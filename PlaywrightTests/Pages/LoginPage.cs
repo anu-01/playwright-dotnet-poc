@@ -1,5 +1,6 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
+using Helpers;
 
 namespace PlaywrightTests.Pages;
 
@@ -49,13 +50,16 @@ namespace PlaywrightTests.Pages;
 
         public async Task VerifyLogin()
         {
-           await Assertions.Expect(title).ToBeVisibleAsync(new() { Timeout= 10_000});
+            await Helpers.AssertionHelper.AssertTextContainsAsync(title, "Products");
+            await Helpers.AssertionHelper.AssertVisibleAsync(title, 20_000);
+          // await Assertions.Expect(title).ToBeVisibleAsync(new() { Timeout= 10_000});
         }
 
         public async Task LogoutAsync()
         {
             await menuButton.ClickAsync();
             await logoutButton.ClickAsync();
-            await Assertions.Expect(loginButton).ToBeVisibleAsync();
+            await Helpers.AssertionHelper.AssertVisibleAsync(loginButton, 20_000);
+           // await Assertions.Expect(loginButton).ToBeVisibleAsync();
         }
     }

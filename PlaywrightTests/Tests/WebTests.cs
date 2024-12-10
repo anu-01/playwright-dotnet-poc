@@ -1,5 +1,6 @@
 using PlaywrightTests.Pages;
 using PlaywrightTests.Reporting;
+using PlaywrightTests.TestData;
 namespace PlaywrightTests;
 
 [TestFixture]
@@ -24,7 +25,7 @@ public class WebTests : ReportGenerator
     public async Task CartCheckout()
     {
         ReportGenerator.extentTest?.Pass("Navigating to the home page and login");
-        await loginPage.Login("standard_user", "secret_sauce");
+        await loginPage.Login(Creds.StandardUser, Creds.Password);
         await loginPage.VerifyLogin();
         ReportGenerator.extentTest?.Pass("Logged in successfully");
         await cartPage.AddToCartAsync("sauce-labs-backpack");

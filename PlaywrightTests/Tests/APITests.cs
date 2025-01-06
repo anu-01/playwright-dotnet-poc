@@ -103,8 +103,7 @@ public class APITests : ReportGenerator
 
         [Test]
         public async Task ShouldCreateABooking()
-        {
-            // Booking data payload
+        {  // Booking data payload
             var bookingData = new
             {
                 firstname = "Jim",
@@ -125,17 +124,15 @@ public class APITests : ReportGenerator
                 DataObject = bookingData
             });
 
-            // Assert response status and validate response body
+            // Assert response status 
             Assert.IsTrue(response.Ok, "Response is not OK");
             Assert.AreEqual(200, response.Status, "Response status is not 200");
  
-            var responseText = await response.TextAsync();
-          
+            var responseText = await response.TextAsync();          
             var responseBody = System.Text.Json.JsonSerializer.Deserialize<JsonNode>(responseText);
-            Console.WriteLine(responseBody?["booking"]); // Log response for debugging
             var booking = responseBody?["booking"];
-
-           Assert.AreEqual("Jim", booking?["firstname"]?.ToString(), "Firstname does not match");
+            // Assert response body
+            Assert.AreEqual("Jim", booking?["firstname"]?.ToString(), "Firstname does not match");
             Assert.AreEqual("Brown", booking?["lastname"]?.ToString(), "Lastname does not match");
             Assert.AreEqual("111", booking?["totalprice"]?.ToString(), "Totalprice does not match");
             Assert.IsTrue((bool)booking?["depositpaid"], "Depositpaid does not match");

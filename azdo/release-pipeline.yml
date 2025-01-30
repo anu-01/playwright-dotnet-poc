@@ -1,0 +1,38 @@
+name: 'Release Pipeline'
+trigger:
+- main
+
+pool:
+  vmImage: windows-latest
+
+steps:
+# Install .NET SDK
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: '8.0.x'
+  displayName: 'Use .NET SDK'
+
+# Build Solution
+- script: dotnet build --configuration Release
+  displayName: 'Build Solution'
+
+# Install Playwright Browsers
+- script: |
+    dotnet tool install -g Microsoft.Playwright.CLI
+    playwright install
+  displayName: 'Install Playwright Browsers'
+
+# Install Visual Studio Test Platform
+- task: VisualStudioTestPlatformInstaller@1
+  displayName: 'Install Visual Studio Test Platform'
+
+# Run Tests
+- task: VSTest@3
+  displayName: 'Run Tests'
+  inputs:
+    testSelector: testAssemblies
+    testAssemblyVer2: '**\bin\Release\net8.0\*test*.dll'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    vsTestVersion: toolsInstaller
+    diagnosticsEnabled: true
